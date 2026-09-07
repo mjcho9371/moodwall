@@ -26,10 +26,12 @@ async function storageSet(area, key, value) {
   await chrome.storage[area].set({ [key]: value });
 }
 
-async function loadManifest() {
-  const cached = await storageGet("local", CACHE_KEY);
-  if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
-    return cached.manifest;
+async function loadManifest(forceRefresh = false) {
+  if (!forceRefresh) {
+    const cached = await storageGet("local", CACHE_KEY);
+    if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) {
+      return cached.manifest;
+    }
   }
 
   const response = await fetch(MANIFEST_URL, { cache: "no-store" });
@@ -436,11 +438,21 @@ async function initGoogleWidgets() {
 }
 
 async function applyMood(mood, manifest) {
-  if (!manifest) {
-    applyBackground(null);
-    return;
+  let photo = manifest ? pickPhoto(manifest, mood) : null;
+
+  // The cached manifest may predate this mood (e.g. a mood added after the
+  // last fetch) -- bypass the cache once before giving up on it.
+  if (!photo && mood !== "random") {
+    try {
+      manifest = await loadManifest(true);
+      photo = pickPhoto(manifest, mood);
+    } catch (err) {
+      console.warn("Moodwall: could not refresh manifest for mood.", err);
+    }
   }
-  applyBackground(pickPhoto(manifest, mood));
+
+  applyBackground(photo);
+  return manifest;
 }
 
 async function init() {
@@ -493,11 +505,11 @@ async function init() {
     console.warn("Moodwall: could not load curated manifest yet.", err);
   }
 
-  await applyMood(storedMood, manifest);
+  manifest = (await applyMood(storedMood, manifest)) ?? manifest;
 
   select.addEventListener("change", async () => {
     await storageSet("sync", MOOD_KEY, select.value);
-    await applyMood(select.value, manifest);
+    manifest = (await applyMood(select.value, manifest)) ?? manifest;
   });
 
   const bookmarks = await loadBookmarks().catch((err) => {

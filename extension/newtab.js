@@ -7,6 +7,7 @@ const CACHE_KEY = "moodwall_manifest_cache";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const MOOD_KEY = "moodwall_selected_mood";
 const FONT_KEY = "moodwall_selected_font";
+const WEIGHT_KEY = "moodwall_selected_weight";
 
 const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
 
@@ -97,9 +98,12 @@ function updateClock() {
   });
 }
 
-function applyFont(fontName) {
+function applyTypography(fontName, weight) {
   const panel = document.getElementById("panel");
+  const clock = document.getElementById("clock");
   let link = document.getElementById("googleFontLink");
+
+  clock.style.fontWeight = weight;
 
   if (!fontName || fontName === "system") {
     if (link) link.remove();
@@ -108,7 +112,7 @@ function applyFont(fontName) {
   }
 
   const familyParam = fontName.replace(/ /g, "+");
-  const href = `https://fonts.googleapis.com/css2?family=${familyParam}:wght@700;800;900&display=swap`;
+  const href = `https://fonts.googleapis.com/css2?family=${familyParam}:wght@${weight}&display=swap`;
 
   if (!link) {
     link = document.createElement("link");
@@ -432,13 +436,21 @@ async function applyMood(mood, manifest) {
 
 async function init() {
   const fontSelect = document.getElementById("fontSelect");
+  const weightSelect = document.getElementById("weightSelect");
   const storedFont = (await storageGet("sync", FONT_KEY)) || "system";
+  const storedWeight = (await storageGet("sync", WEIGHT_KEY)) || "800";
   fontSelect.value = storedFont;
-  applyFont(storedFont);
+  weightSelect.value = storedWeight;
+  applyTypography(storedFont, storedWeight);
 
   fontSelect.addEventListener("change", async () => {
     await storageSet("sync", FONT_KEY, fontSelect.value);
-    applyFont(fontSelect.value);
+    applyTypography(fontSelect.value, weightSelect.value);
+  });
+
+  weightSelect.addEventListener("change", async () => {
+    await storageSet("sync", WEIGHT_KEY, weightSelect.value);
+    applyTypography(fontSelect.value, weightSelect.value);
   });
 
   const select = document.getElementById("moodSelect");

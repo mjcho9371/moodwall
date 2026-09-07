@@ -101,6 +101,7 @@ html, body {
 }
 
 #fontSelect,
+#weightSelect,
 #moodSelect {
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
@@ -113,6 +114,7 @@ html, body {
 }
 
 #fontSelect option,
+#weightSelect option,
 #moodSelect option {
   color: #111;
 }

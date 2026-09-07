@@ -159,6 +159,13 @@ html, body {
   cursor: pointer;
 }
 
+#settingsPanel hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 2px 0;
+}
+
 #settingsPanel button {
   margin-top: 4px;
   padding: 7px 12px;

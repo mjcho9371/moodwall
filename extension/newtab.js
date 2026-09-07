@@ -8,6 +8,9 @@ const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const MOOD_KEY = "moodwall_selected_mood";
 const FONT_KEY = "moodwall_selected_font";
 const WEIGHT_KEY = "moodwall_selected_weight";
+const SHOW_SECONDS_KEY = "moodwall_show_seconds";
+
+let showSeconds = true;
 
 const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
 
@@ -84,7 +87,8 @@ function applyBackground(photo) {
 
 function formatTime(date) {
   const pad = (n) => String(n).padStart(2, "0");
-  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+  const base = `${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  return showSeconds ? `${base}:${pad(date.getSeconds())}` : base;
 }
 
 function updateClock() {
@@ -451,6 +455,16 @@ async function init() {
   weightSelect.addEventListener("change", async () => {
     await storageSet("sync", WEIGHT_KEY, weightSelect.value);
     applyTypography(fontSelect.value, weightSelect.value);
+  });
+
+  const toggleSeconds = document.getElementById("toggleSeconds");
+  showSeconds = (await storageGet("sync", SHOW_SECONDS_KEY)) ?? true;
+  toggleSeconds.checked = showSeconds;
+
+  toggleSeconds.addEventListener("change", async () => {
+    showSeconds = toggleSeconds.checked;
+    await storageSet("sync", SHOW_SECONDS_KEY, showSeconds);
+    updateClock();
   });
 
   const select = document.getElementById("moodSelect");

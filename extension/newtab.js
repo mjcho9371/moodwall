@@ -92,18 +92,9 @@ function formatTime(date) {
   return showSeconds ? `${base}:${pad(date.getSeconds())}` : base;
 }
 
-function greetingFor(hours) {
-  if (hours < 5) return "좋은 밤이에요";
-  if (hours < 12) return "좋은 아침이에요";
-  if (hours < 18) return "좋은 오후예요";
-  if (hours < 22) return "좋은 저녁이에요";
-  return "좋은 밤이에요";
-}
-
 function updateClock() {
   const now = new Date();
   document.getElementById("clock").textContent = formatTime(now);
-  document.getElementById("greeting").textContent = greetingFor(now.getHours());
   document.getElementById("date").textContent = now.toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "long",

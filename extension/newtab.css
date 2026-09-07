@@ -61,20 +61,12 @@ html, body {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
-#greeting {
-  display: none;
-  font-size: clamp(18px, 2.2vw, 30px);
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.85);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
-}
-
 #searchForm {
   width: min(420px, 70vw);
   margin-top: 10px;
 }
 
-/* Corner layout: clock/greeting pinned top-left, left-aligned, like a lock screen */
+/* Corner layout: clock pinned top-left, left-aligned, like a lock screen */
 body.layout-corner #panel {
   top: 56px;
   left: 48px;
@@ -86,10 +78,6 @@ body.layout-corner #panel {
 
 body.layout-corner #clock {
   font-size: clamp(64px, 11vw, 150px);
-}
-
-body.layout-corner #greeting {
-  display: block;
 }
 
 body.layout-corner #date {

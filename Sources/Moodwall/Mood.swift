@@ -10,6 +10,8 @@ enum Mood: String, CaseIterable, Identifiable, Codable {
     case dark
     case cozy
     case ocean
+    case fall
+    case winter
     case random
 
     var id: String { rawValue }
@@ -23,6 +25,8 @@ enum Mood: String, CaseIterable, Identifiable, Codable {
         case .dark: return "다크"
         case .cozy: return "포근함"
         case .ocean: return "바다"
+        case .fall: return "가을"
+        case .winter: return "겨울"
         case .random: return "랜덤"
         }
     }

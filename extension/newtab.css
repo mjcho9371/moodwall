@@ -61,9 +61,44 @@ html, body {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
+#greeting {
+  display: none;
+  font-size: clamp(18px, 2.2vw, 30px);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
 #searchForm {
   width: min(420px, 70vw);
   margin-top: 10px;
+}
+
+/* Corner layout: clock/greeting pinned top-left, left-aligned, like a lock screen */
+body.layout-corner #panel {
+  top: 56px;
+  left: 48px;
+  transform: none;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+}
+
+body.layout-corner #clock {
+  font-size: clamp(48px, 8vw, 104px);
+}
+
+body.layout-corner #greeting {
+  display: block;
+}
+
+body.layout-corner #date {
+  display: none;
+}
+
+body.layout-corner #searchForm {
+  margin-top: 18px;
+  width: min(360px, 60vw);
 }
 
 #searchInput {
@@ -102,6 +137,7 @@ html, body {
 
 #fontSelect,
 #weightSelect,
+#layoutSelect,
 #moodSelect {
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
@@ -115,6 +151,7 @@ html, body {
 
 #fontSelect option,
 #weightSelect option,
+#layoutSelect option,
 #moodSelect option {
   color: #111;
 }

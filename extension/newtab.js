@@ -9,6 +9,7 @@ const MOOD_KEY = "moodwall_selected_mood";
 const FONT_KEY = "moodwall_selected_font";
 const WEIGHT_KEY = "moodwall_selected_weight";
 const SHOW_SECONDS_KEY = "moodwall_show_seconds";
+const LAYOUT_KEY = "moodwall_layout";
 
 let showSeconds = true;
 
@@ -91,15 +92,28 @@ function formatTime(date) {
   return showSeconds ? `${base}:${pad(date.getSeconds())}` : base;
 }
 
+function greetingFor(hours) {
+  if (hours < 5) return "좋은 밤이에요";
+  if (hours < 12) return "좋은 아침이에요";
+  if (hours < 18) return "좋은 오후예요";
+  if (hours < 22) return "좋은 저녁이에요";
+  return "좋은 밤이에요";
+}
+
 function updateClock() {
   const now = new Date();
   document.getElementById("clock").textContent = formatTime(now);
+  document.getElementById("greeting").textContent = greetingFor(now.getHours());
   document.getElementById("date").textContent = now.toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "long",
     day: "numeric",
     weekday: "long"
   });
+}
+
+function applyLayout(layout) {
+  document.body.classList.toggle("layout-corner", layout === "corner");
 }
 
 function applyTypography(fontName, weight) {
@@ -465,6 +479,16 @@ async function init() {
     showSeconds = toggleSeconds.checked;
     await storageSet("sync", SHOW_SECONDS_KEY, showSeconds);
     updateClock();
+  });
+
+  const layoutSelect = document.getElementById("layoutSelect");
+  const storedLayout = (await storageGet("sync", LAYOUT_KEY)) || "center";
+  layoutSelect.value = storedLayout;
+  applyLayout(storedLayout);
+
+  layoutSelect.addEventListener("change", async () => {
+    await storageSet("sync", LAYOUT_KEY, layoutSelect.value);
+    applyLayout(layoutSelect.value);
   });
 
   const select = document.getElementById("moodSelect");

@@ -31,6 +31,11 @@
       <option value="900">Black</option>
     </select>
 
+    <select id="layoutSelect" aria-label="레이아웃 선택">
+      <option value="center">가운데</option>
+      <option value="corner">코너</option>
+    </select>
+
     <select id="moodSelect" aria-label="무드 선택">
       <option value="random">랜덤</option>
       <option value="calm">차분함</option>
@@ -67,6 +72,7 @@
 
   <main id="panel">
     <div id="clock">00:00:00 AM</div>
+    <div id="greeting"></div>
     <div id="date"></div>
     <form id="searchForm" action="https://www.google.com/search" method="GET" autocomplete="off">
       <input

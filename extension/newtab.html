@@ -20,9 +20,19 @@
     <option value="ocean">바다</option>
   </select>
 
-  <main id="clockBlock">
+  <main id="panel">
     <div id="clock">00:00:00 AM</div>
     <div id="date"></div>
+    <form id="searchForm" action="https://www.google.com/search" method="GET" autocomplete="off">
+      <input
+        type="search"
+        name="q"
+        id="searchInput"
+        placeholder="Google 검색"
+        autocomplete="off"
+        autofocus
+      />
+    </form>
   </main>
 
   <div id="credit"></div>

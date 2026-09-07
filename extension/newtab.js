@@ -82,11 +82,8 @@ function applyBackground(photo) {
 }
 
 function formatTime(date) {
-  const hours24 = date.getHours();
-  const period = hours24 < 12 ? "AM" : "PM";
-  const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12;
   const pad = (n) => String(n).padStart(2, "0");
-  return `${pad(hours12)}:${pad(date.getMinutes())}:${pad(date.getSeconds())} ${period}`;
+  return `${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
 
 function updateClock() {

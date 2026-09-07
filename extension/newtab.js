@@ -193,6 +193,238 @@ function renderBookmarks(bookmarks) {
   }
 }
 
+const CALENDAR_ENABLED_KEY = "moodwall_show_calendar";
+const GMAIL_ENABLED_KEY = "moodwall_show_gmail";
+
+function getAuthToken(interactive) {
+  return new Promise((resolve, reject) => {
+    if (typeof chrome === "undefined" || !chrome.identity) {
+      reject(new Error("chrome.identity unavailable"));
+      return;
+    }
+    chrome.identity.getAuthToken({ interactive }, (token) => {
+      if (chrome.runtime.lastError || !token) {
+        reject(new Error(chrome.runtime.lastError?.message || "no token"));
+      } else {
+        resolve(token);
+      }
+    });
+  });
+}
+
+function removeCachedAuthToken(token) {
+  return new Promise((resolve) => {
+    chrome.identity.removeCachedAuthToken({ token }, () => resolve());
+  });
+}
+
+async function googleFetch(url, token) {
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!res.ok) throw new Error(`request failed: ${res.status}`);
+  return res.json();
+}
+
+async function fetchNextEvents(token, maxResults = 3) {
+  const url = new URL("https://www.googleapis.com/calendar/v3/calendars/primary/events");
+  url.searchParams.set("timeMin", new Date().toISOString());
+  url.searchParams.set("maxResults", String(maxResults));
+  url.searchParams.set("singleEvents", "true");
+  url.searchParams.set("orderBy", "startTime");
+  const data = await googleFetch(url, token);
+  return (data.items || []).map((event) => ({
+    title: event.summary || "(제목 없음)",
+    start: event.start?.dateTime || event.start?.date || null,
+    allDay: !event.start?.dateTime
+  }));
+}
+
+async function fetchUnreadGmail(token, maxResults = 5) {
+  const labelData = await googleFetch(
+    "https://gmail.googleapis.com/gmail/v1/users/me/labels/UNREAD",
+    token
+  );
+  const unreadCount = labelData.messagesUnread || 0;
+
+  const listUrl = new URL("https://gmail.googleapis.com/gmail/v1/users/me/messages");
+  listUrl.searchParams.set("q", "is:unread");
+  listUrl.searchParams.set("maxResults", String(maxResults));
+  const listData = await googleFetch(listUrl, token);
+  const ids = (listData.messages || []).map((m) => m.id);
+
+  const messages = await Promise.all(
+    ids.map(async (id) => {
+      const msgUrl = new URL(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}`);
+      msgUrl.searchParams.set("format", "metadata");
+      msgUrl.searchParams.append("metadataHeaders", "Subject");
+      msgUrl.searchParams.append("metadataHeaders", "From");
+      try {
+        const data = await googleFetch(msgUrl, token);
+        const headers = data.payload?.headers || [];
+        const get = (name) => headers.find((h) => h.name === name)?.value || "";
+        return {
+          subject: get("Subject") || "(제목 없음)",
+          from: get("From").replace(/<[^>]*>/, "").replace(/"/g, "").trim(),
+          date: Number(data.internalDate) || 0
+        };
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  return {
+    unreadCount,
+    messages: messages.filter(Boolean).sort((a, b) => b.date - a.date)
+  };
+}
+
+function formatEventTime(event) {
+  if (!event.start) return "";
+  const date = new Date(event.start);
+  if (event.allDay) {
+    return date.toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
+  }
+  return date.toLocaleString("ko-KR", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+function renderCardMessage(listEl, text) {
+  listEl.replaceChildren();
+  const li = document.createElement("li");
+  li.textContent = text;
+  listEl.append(li);
+}
+
+function renderConnectButton(widgetEl, onClick) {
+  const button = document.createElement("button");
+  button.className = "card-action";
+  button.textContent = "Google 계정 연결";
+  button.addEventListener("click", onClick);
+  widgetEl.querySelector("ul").replaceChildren();
+  widgetEl.querySelector("h3").after(button);
+}
+
+async function refreshCalendarWidget() {
+  const widget = document.getElementById("calendarWidget");
+  const list = document.getElementById("calendarList");
+  const enabled = (await storageGet("sync", CALENDAR_ENABLED_KEY)) ?? false;
+  widget.hidden = !enabled;
+  if (!enabled) return;
+
+  widget.querySelectorAll(".card-action").forEach((btn) => btn.remove());
+  renderCardMessage(list, "불러오는 중…");
+
+  try {
+    const token = await getAuthToken(false);
+    const events = await fetchNextEvents(token);
+    if (events.length === 0) {
+      renderCardMessage(list, "예정된 일정 없음");
+      return;
+    }
+    list.replaceChildren();
+    for (const event of events) {
+      const li = document.createElement("li");
+      li.textContent = `${formatEventTime(event)} · ${event.title}`;
+      list.append(li);
+    }
+  } catch (err) {
+    console.warn("Moodwall: calendar fetch failed.", err);
+    renderConnectButton(widget, () => connectGoogle());
+    renderCardMessage(list, "Google 계정 연결이 필요해요");
+  }
+}
+
+async function refreshGmailWidget() {
+  const widget = document.getElementById("gmailWidget");
+  const list = document.getElementById("gmailList");
+  const countEl = document.getElementById("unreadCount");
+  const enabled = (await storageGet("sync", GMAIL_ENABLED_KEY)) ?? false;
+  widget.hidden = !enabled;
+  if (!enabled) return;
+
+  widget.querySelectorAll(".card-action").forEach((btn) => btn.remove());
+  countEl.textContent = "";
+  renderCardMessage(list, "불러오는 중…");
+
+  try {
+    const token = await getAuthToken(false);
+    const { unreadCount, messages } = await fetchUnreadGmail(token);
+    countEl.textContent = `(${unreadCount})`;
+    if (messages.length === 0) {
+      renderCardMessage(list, "읽지 않은 메일 없음");
+      return;
+    }
+    list.replaceChildren();
+    for (const msg of messages) {
+      const li = document.createElement("li");
+      const from = document.createElement("span");
+      from.className = "gmail-from";
+      from.textContent = msg.from;
+      const subject = document.createElement("span");
+      subject.className = "gmail-subject";
+      subject.textContent = ` — ${msg.subject}`;
+      li.append(from, subject);
+      list.append(li);
+    }
+  } catch (err) {
+    console.warn("Moodwall: gmail fetch failed.", err);
+    renderConnectButton(widget, () => connectGoogle());
+    renderCardMessage(list, "Google 계정 연결이 필요해요");
+  }
+}
+
+async function connectGoogle() {
+  try {
+    await getAuthToken(true);
+    await Promise.all([refreshCalendarWidget(), refreshGmailWidget()]);
+  } catch (err) {
+    console.warn("Moodwall: Google sign-in failed.", err);
+  }
+}
+
+async function disconnectGoogle() {
+  try {
+    const token = await getAuthToken(false);
+    await removeCachedAuthToken(token);
+    await fetch(`https://accounts.google.com/o/oauth2/revoke?token=${token}`, { mode: "no-cors" });
+  } catch {
+    // already signed out
+  }
+  await Promise.all([refreshCalendarWidget(), refreshGmailWidget()]);
+}
+
+async function initGoogleWidgets() {
+  const toggleCalendar = document.getElementById("toggleCalendar");
+  const toggleGmail = document.getElementById("toggleGmail");
+  const settingsButton = document.getElementById("settingsButton");
+  const settingsPanel = document.getElementById("settingsPanel");
+  const signInButton = document.getElementById("googleSignInButton");
+  const signOutButton = document.getElementById("googleSignOutButton");
+
+  toggleCalendar.checked = (await storageGet("sync", CALENDAR_ENABLED_KEY)) ?? false;
+  toggleGmail.checked = (await storageGet("sync", GMAIL_ENABLED_KEY)) ?? false;
+
+  settingsButton.addEventListener("click", () => {
+    settingsPanel.hidden = !settingsPanel.hidden;
+  });
+
+  toggleCalendar.addEventListener("change", async () => {
+    await storageSet("sync", CALENDAR_ENABLED_KEY, toggleCalendar.checked);
+    await refreshCalendarWidget();
+  });
+
+  toggleGmail.addEventListener("change", async () => {
+    await storageSet("sync", GMAIL_ENABLED_KEY, toggleGmail.checked);
+    await refreshGmailWidget();
+  });
+
+  signInButton.hidden = false;
+  signOutButton.hidden = false;
+  signInButton.addEventListener("click", connectGoogle);
+  signOutButton.addEventListener("click", disconnectGoogle);
+
+  await Promise.all([refreshCalendarWidget(), refreshGmailWidget()]);
+}
+
 async function applyMood(mood, manifest) {
   if (!manifest) {
     applyBackground(null);
@@ -236,6 +468,8 @@ async function init() {
   });
   console.log(`Moodwall: loaded ${bookmarks.length} bookmark(s).`);
   renderBookmarks(bookmarks);
+
+  await initGoogleWidgets();
 
   updateClock();
   setInterval(updateClock, 1000);

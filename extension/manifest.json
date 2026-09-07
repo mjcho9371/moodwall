@@ -3,12 +3,22 @@
   "name": "Moodwall",
   "version": "1.0",
   "description": "새 탭을 열 때마다 큐레이션된 무드 사진과 실시간 시계를 보여줍니다.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzeNA2U3OUFvaMF56MVxQiWw8KhtbxTfrcCnWEOACdVCWCYpwDl6UPP6nKs3QlEcvisZ26ZrUx5cXM4hdyybbL1vYHwyytXfDyxgIHx5hrHnIGXm66h++9a26jKOwh5dZk5F83uLLPpvDHpNMaYZwhoFi+s6x2VaBAFtXhSX+PZatN2ysuR38y/QWLcP+LBCIHKrDBNeih902Zr4xjcC+0T7mZ2RZLphr8aIypXBNFUCaOom8a6woE7JjRg+M7Lqy/aTTUli1QtinIhklmZtzN0Q3lcVtrLnZUyq46I8hemsp73J8xe1DC8WneSxHRA53bkxw3GDtq3jXvhfmN3zgAQIDAQAB",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
-  "permissions": ["storage", "bookmarks", "favicon"],
+  "permissions": ["storage", "bookmarks", "favicon", "identity"],
   "host_permissions": [
     "https://raw.githubusercontent.com/*",
-    "https://images.unsplash.com/*"
-  ]
+    "https://images.unsplash.com/*",
+    "https://www.googleapis.com/*",
+    "https://gmail.googleapis.com/*"
+  ],
+  "oauth2": {
+    "client_id": "REPLACE_WITH_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/gmail.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly"
+    ]
+  }
 }

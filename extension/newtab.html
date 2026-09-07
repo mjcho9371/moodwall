@@ -32,6 +32,26 @@
       <option value="cozy">포근함</option>
       <option value="ocean">바다</option>
     </select>
+
+    <button id="settingsButton" aria-label="설정" title="위젯 설정">⚙</button>
+  </div>
+
+  <div id="settingsPanel" hidden>
+    <label><input type="checkbox" id="toggleCalendar" /> 다음 일정 표시</label>
+    <label><input type="checkbox" id="toggleGmail" /> 안읽은 메일 표시</label>
+    <button id="googleSignInButton" hidden>Google 계정 연결</button>
+    <button id="googleSignOutButton" hidden>연결 해제</button>
+  </div>
+
+  <div id="widgets">
+    <section id="calendarWidget" class="info-card" hidden>
+      <h3>다음 일정</h3>
+      <ul id="calendarList"></ul>
+    </section>
+    <section id="gmailWidget" class="info-card" hidden>
+      <h3>안읽은 메일 <span id="unreadCount"></span></h3>
+      <ul id="gmailList"></ul>
+    </section>
   </div>
 
   <main id="panel">

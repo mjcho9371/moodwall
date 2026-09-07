@@ -52,8 +52,8 @@ html, body {
   color: rgba(255, 255, 255, 0.45);
   -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
   text-shadow:
-    0 0 30px rgba(255, 255, 255, 0.4),
-    0 0 60px rgba(255, 255, 255, 0.2);
+    0 0 14px rgba(255, 255, 255, 0.2),
+    0 0 28px rgba(255, 255, 255, 0.1);
 }
 
 #date {

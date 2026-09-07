@@ -1,0 +1,6 @@
+.build/
+Moodwall.app/
+.swiftpm/
+.DS_Store
+safari/**/xcuserdata/
+safari/**/*.xcuserstate

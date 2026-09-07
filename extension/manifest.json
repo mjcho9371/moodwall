@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Moodwall",
+  "version": "1.0",
+  "description": "새 탭을 열 때마다 큐레이션된 무드 사진과 실시간 시계를 보여줍니다.",
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://raw.githubusercontent.com/*",
+    "https://images.unsplash.com/*"
+  ]
+}

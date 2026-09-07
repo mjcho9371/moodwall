@@ -1,0 +1,39 @@
+{
+  "updatedAt": "2026-09-07T01:05:57.968406Z",
+  "moods": {
+    "calm": [
+      {
+        "id": "r-nJDGpjRic",
+        "imageURL": "https://images.unsplash.com/photo-1538681105587-85640961bf8b?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDF8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA&ixlib=rb-4.1.0&w=3840&q=80&fm=jpg&fit=max",
+        "photographer": "Geoffrey Lucas",
+        "photographerURL": "https://unsplash.com/@i_caring",
+        "unsplashURL": "https://unsplash.com/photos/boat-on-body-of-water-near-mountains-r-nJDGpjRic",
+        "downloadLocation": "https://api.unsplash.com/photos/r-nJDGpjRic/download?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDF8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA"
+      },
+      {
+        "id": "ffmoMwIczfk",
+        "imageURL": "https://images.unsplash.com/photo-1597686512950-fd9e47e920b1?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDJ8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA&ixlib=rb-4.1.0&w=3840&q=80&fm=jpg&fit=max",
+        "photographer": "Vivian K",
+        "photographerURL": "https://unsplash.com/@vivian8598",
+        "unsplashURL": "https://unsplash.com/photos/brown-wooden-dock-on-lake-during-daytime-ffmoMwIczfk",
+        "downloadLocation": "https://api.unsplash.com/photos/ffmoMwIczfk/download?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDJ8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA"
+      },
+      {
+        "id": "I4ScSrKsfIg",
+        "imageURL": "https://images.unsplash.com/photo-1467625575448-2ef10dabab8a?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDN8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA&ixlib=rb-4.1.0&w=3840&q=80&fm=jpg&fit=max",
+        "photographer": "Chloé Lam",
+        "photographerURL": "https://unsplash.com/@jlmo9492",
+        "unsplashURL": "https://unsplash.com/photos/swamp-surrounded-with-green-pine-trees-during-daytime-I4ScSrKsfIg",
+        "downloadLocation": "https://api.unsplash.com/photos/I4ScSrKsfIg/download?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDN8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA"
+      },
+      {
+        "id": "P36KI_ws3vs",
+        "imageURL": "https://images.unsplash.com/photo-1472017454701-20a80cfeaac5?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDR8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA&ixlib=rb-4.1.0&w=3840&q=80&fm=jpg&fit=max",
+        "photographer": "Vlad Shapochnikov",
+        "photographerURL": "https://unsplash.com/@vladshap",
+        "unsplashURL": "https://unsplash.com/photos/lake-beside-green-pine-trees-P36KI_ws3vs",
+        "downloadLocation": "https://api.unsplash.com/photos/P36KI_ws3vs/download?ixid=M3wxMDU3ODI5fDB8MXxjb2xsZWN0aW9ufDR8NTkyMzcwfHx8fHwyfHwxNzg4NzQzMTU3fA"
+      }
+    ]
+  }
+}

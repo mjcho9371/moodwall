@@ -99,6 +99,61 @@ function updateClock() {
   });
 }
 
+const MAX_BOOKMARKS = 10;
+
+async function loadBookmarks() {
+  if (typeof chrome === "undefined" || !chrome.bookmarks) return [];
+
+  const tree = await chrome.bookmarks.getTree();
+  const flat = [];
+
+  function walk(nodes) {
+    for (const node of nodes) {
+      if (flat.length >= MAX_BOOKMARKS) return;
+      if (node.url) {
+        flat.push({ title: node.title || node.url, url: node.url });
+      } else if (node.children) {
+        walk(node.children);
+      }
+      if (flat.length >= MAX_BOOKMARKS) return;
+    }
+  }
+
+  walk(tree);
+  return flat;
+}
+
+function faviconURL(pageUrl) {
+  const url = new URL(chrome.runtime.getURL("/_favicon/"));
+  url.searchParams.set("pageUrl", pageUrl);
+  url.searchParams.set("size", "32");
+  return url.toString();
+}
+
+function renderBookmarks(bookmarks) {
+  const container = document.getElementById("bookmarks");
+  container.replaceChildren();
+
+  for (const bookmark of bookmarks) {
+    const link = document.createElement("a");
+    link.className = "bookmark-item";
+    link.href = bookmark.url;
+    link.title = bookmark.title;
+
+    const icon = document.createElement("img");
+    icon.className = "bookmark-favicon";
+    icon.alt = "";
+    icon.src = faviconURL(bookmark.url);
+
+    const label = document.createElement("span");
+    label.className = "bookmark-label";
+    label.textContent = bookmark.title;
+
+    link.append(icon, label);
+    container.append(link);
+  }
+}
+
 async function applyMood(mood, manifest) {
   if (!manifest) {
     applyBackground(null);
@@ -125,6 +180,12 @@ async function init() {
     await storageSet("sync", MOOD_KEY, select.value);
     await applyMood(select.value, manifest);
   });
+
+  const bookmarks = await loadBookmarks().catch((err) => {
+    console.warn("Moodwall: could not load bookmarks.", err);
+    return [];
+  });
+  renderBookmarks(bookmarks);
 
   updateClock();
   setInterval(updateClock, 1000);

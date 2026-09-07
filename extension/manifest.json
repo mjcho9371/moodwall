@@ -6,7 +6,7 @@
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
-  "permissions": ["storage"],
+  "permissions": ["storage", "bookmarks", "favicon"],
   "host_permissions": [
     "https://raw.githubusercontent.com/*",
     "https://images.unsplash.com/*"

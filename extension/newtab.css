@@ -115,6 +115,55 @@ html, body {
   color: #111;
 }
 
+#bookmarks {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: min(760px, 88vw);
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 160px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.bookmark-item:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-2px);
+}
+
+.bookmark-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.bookmark-label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 #credit {
   position: fixed;
   bottom: 16px;

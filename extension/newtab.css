@@ -49,12 +49,9 @@ html, body {
   letter-spacing: -0.03em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  color: rgba(255, 255, 255, 0.35);
-  text-shadow:
-    1px 0 0 rgba(255, 255, 255, 0.4),
-    -1px 0 0 rgba(255, 255, 255, 0.4),
-    0 1px 0 rgba(255, 255, 255, 0.4),
-    0 -1px 0 rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.55);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #date {

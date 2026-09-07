@@ -6,6 +6,7 @@ const MANIFEST_URL =
 const CACHE_KEY = "moodwall_manifest_cache";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const MOOD_KEY = "moodwall_selected_mood";
+const FONT_KEY = "moodwall_selected_font";
 
 const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
 
@@ -99,6 +100,29 @@ function updateClock() {
   });
 }
 
+function applyFont(fontName) {
+  const panel = document.getElementById("panel");
+  let link = document.getElementById("googleFontLink");
+
+  if (!fontName || fontName === "system") {
+    if (link) link.remove();
+    panel.style.fontFamily = "";
+    return;
+  }
+
+  const familyParam = fontName.replace(/ /g, "+");
+  const href = `https://fonts.googleapis.com/css2?family=${familyParam}:wght@700;800;900&display=swap`;
+
+  if (!link) {
+    link = document.createElement("link");
+    link.id = "googleFontLink";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }
+  link.href = href;
+  panel.style.fontFamily = `'${fontName}', -apple-system, sans-serif`;
+}
+
 const MAX_BOOKMARKS = 10;
 
 function getBookmarkTree() {
@@ -178,6 +202,16 @@ async function applyMood(mood, manifest) {
 }
 
 async function init() {
+  const fontSelect = document.getElementById("fontSelect");
+  const storedFont = (await storageGet("sync", FONT_KEY)) || "system";
+  fontSelect.value = storedFont;
+  applyFont(storedFont);
+
+  fontSelect.addEventListener("change", async () => {
+    await storageSet("sync", FONT_KEY, fontSelect.value);
+    applyFont(fontSelect.value);
+  });
+
   const select = document.getElementById("moodSelect");
   const storedMood = (await storageGet("sync", MOOD_KEY)) || "random";
   select.value = storedMood;

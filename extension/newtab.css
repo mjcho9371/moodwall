@@ -229,6 +229,12 @@ body.layout-corner #searchForm {
   max-width: 280px;
 }
 
+/* Corner layout already occupies the top-left with the clock, so push
+   the calendar/gmail cards below it instead of overlapping. */
+body.layout-corner #widgets {
+  top: 280px;
+}
+
 .info-card {
   padding: 14px 16px;
   border-radius: 16px;

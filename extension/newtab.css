@@ -85,7 +85,7 @@ body.layout-corner #panel {
 }
 
 body.layout-corner #clock {
-  font-size: clamp(48px, 8vw, 104px);
+  font-size: clamp(64px, 11vw, 150px);
 }
 
 body.layout-corner #greeting {

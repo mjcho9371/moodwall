@@ -101,10 +101,25 @@ function updateClock() {
 
 const MAX_BOOKMARKS = 10;
 
-async function loadBookmarks() {
-  if (typeof chrome === "undefined" || !chrome.bookmarks) return [];
+function getBookmarkTree() {
+  return new Promise((resolve, reject) => {
+    chrome.bookmarks.getTree((tree) => {
+      if (chrome.runtime.lastError) {
+        reject(new Error(chrome.runtime.lastError.message));
+      } else {
+        resolve(tree);
+      }
+    });
+  });
+}
 
-  const tree = await chrome.bookmarks.getTree();
+async function loadBookmarks() {
+  if (typeof chrome === "undefined" || !chrome.bookmarks) {
+    console.warn("Moodwall: chrome.bookmarks unavailable (not running as an installed extension, or permission missing).");
+    return [];
+  }
+
+  const tree = await getBookmarkTree();
   const flat = [];
 
   function walk(nodes) {
@@ -185,6 +200,7 @@ async function init() {
     console.warn("Moodwall: could not load bookmarks.", err);
     return [];
   });
+  console.log(`Moodwall: loaded ${bookmarks.length} bookmark(s).`);
   renderBookmarks(bookmarks);
 
   updateClock();

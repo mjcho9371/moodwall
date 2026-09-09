@@ -302,12 +302,12 @@ body.layout-corner #widgets {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 96px;
+  height: 112px;
   z-index: 2;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 16px;
+  padding-bottom: 18px;
 }
 
 #bookmarksZone:not([hidden]) {
@@ -332,7 +332,7 @@ body.layout-corner #widgets {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 14px;
   max-width: min(760px, 88vw);
   opacity: 0;
   transform: translateY(16px);
@@ -348,39 +348,60 @@ body.layout-corner #widgets {
 }
 
 .bookmark-item {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
-  max-width: 160px;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  color: #fff;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
   text-decoration: none;
-  font-size: 13px;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.18s ease;
 }
 
 .bookmark-item:hover {
-  background: rgba(255, 255, 255, 0.26);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-8px) scale(1.08);
 }
 
 .bookmark-favicon {
-  width: 16px;
-  height: 16px;
-  border-radius: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.92);
+  padding: 4px;
+  box-sizing: border-box;
+  object-fit: contain;
 }
 
 .bookmark-label {
-  overflow: hidden;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  max-width: 140px;
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(20, 20, 24, 0.85);
+  color: #fff;
+  font-size: 12px;
   white-space: nowrap;
+  overflow: hidden;
   text-overflow: ellipsis;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 4px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.bookmark-item:hover .bookmark-label {
+  opacity: 1;
+  transform: translate(-50%, 0);
 }
 
 #credit {

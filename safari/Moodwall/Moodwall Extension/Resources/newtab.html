@@ -9,24 +9,94 @@
   <div id="background"></div>
   <div id="scrim"></div>
 
-  <select id="moodSelect" aria-label="무드 선택">
-    <option value="random">랜덤</option>
-    <option value="calm">차분함</option>
-    <option value="energetic">활기참</option>
-    <option value="nature">자연</option>
-    <option value="minimal">미니멀</option>
-    <option value="dark">다크</option>
-    <option value="cozy">포근함</option>
-    <option value="ocean">바다</option>
-  </select>
+  <div id="topControls">
+    <select id="fontSelect" aria-label="폰트 선택">
+      <option value="system">시스템 기본</option>
+      <option value="Inter">Inter</option>
+      <option value="Poppins">Poppins</option>
+      <option value="Montserrat">Montserrat</option>
+      <option value="Sora">Sora</option>
+      <option value="Space Grotesk">Space Grotesk</option>
+      <option value="Outfit">Outfit</option>
+      <option value="Bebas Neue">Bebas Neue</option>
+      <option value="Archivo Black">Archivo Black</option>
+    </select>
 
-  <main id="clockBlock">
+    <select id="weightSelect" aria-label="폰트 굵기 선택">
+      <option value="400">Regular</option>
+      <option value="500">Medium</option>
+      <option value="600">SemiBold</option>
+      <option value="700">Bold</option>
+      <option value="800" selected>ExtraBold</option>
+      <option value="900">Black</option>
+    </select>
+
+    <select id="layoutSelect" aria-label="레이아웃 선택">
+      <option value="center">가운데</option>
+      <option value="corner">코너</option>
+    </select>
+
+    <select id="moodSelect" aria-label="무드 선택">
+      <option value="random">랜덤</option>
+      <option value="calm">차분함</option>
+      <option value="energetic">활기참</option>
+      <option value="nature">자연</option>
+      <option value="minimal">미니멀</option>
+      <option value="dark">다크</option>
+      <option value="cozy">포근함</option>
+      <option value="ocean">바다</option>
+      <option value="fall">가을</option>
+      <option value="winter">겨울</option>
+    </select>
+
+    <button id="settingsButton" aria-label="설정" title="위젯 설정">⚙</button>
+  </div>
+
+  <div id="settingsPanel" hidden>
+    <label><input type="checkbox" id="toggleSeconds" /> 시계에 초 표시</label>
+    <label><input type="checkbox" id="toggleQuote" /> 명언 표시</label>
+    <hr />
+    <label><input type="checkbox" id="toggleCalendar" /> 다음 일정 표시</label>
+    <label><input type="checkbox" id="toggleGmail" /> 안읽은 메일 표시</label>
+    <button id="googleSignInButton" hidden>Google 계정 연결</button>
+    <button id="googleSignOutButton" hidden>연결 해제</button>
+  </div>
+
+  <div id="widgets">
+    <section id="calendarWidget" class="info-card" hidden>
+      <h3>다음 일정</h3>
+      <ul id="calendarList"></ul>
+    </section>
+    <section id="gmailWidget" class="info-card" hidden>
+      <h3>안읽은 메일 <span id="unreadCount"></span></h3>
+      <ul id="gmailList"></ul>
+    </section>
+  </div>
+
+  <main id="panel">
     <div id="clock">00:00:00 AM</div>
     <div id="date"></div>
+    <form id="searchForm" action="https://www.google.com/search" method="GET" autocomplete="off">
+      <input
+        type="search"
+        name="q"
+        id="searchInput"
+        placeholder="Google 검색"
+        autocomplete="off"
+        autofocus
+      />
+    </form>
+    <blockquote id="quote" hidden>
+      <p id="quoteText"></p>
+      <cite id="quoteAuthor"></cite>
+    </blockquote>
   </main>
+
+  <nav id="bookmarks" aria-label="북마크 바로가기"></nav>
 
   <div id="credit"></div>
 
+  <script src="quotes.js"></script>
   <script src="newtab.js"></script>
 </body>
 </html>

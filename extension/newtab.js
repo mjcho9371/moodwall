@@ -10,6 +10,7 @@ const FONT_KEY = "moodwall_selected_font";
 const WEIGHT_KEY = "moodwall_selected_weight";
 const SHOW_SECONDS_KEY = "moodwall_show_seconds";
 const LAYOUT_KEY = "moodwall_layout";
+const SHOW_QUOTE_KEY = "moodwall_show_quote";
 
 let showSeconds = true;
 
@@ -107,6 +108,20 @@ function updateClock() {
 
 function applyLayout(layout) {
   document.body.classList.toggle("layout-corner", layout === "corner");
+}
+
+function showRandomQuote() {
+  const quotes = typeof QUOTES !== "undefined" ? QUOTES : [];
+  if (quotes.length === 0) return;
+  const { text, author } = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById("quoteText").textContent = text;
+  document.getElementById("quoteAuthor").textContent = author;
+}
+
+async function applyQuoteVisibility(enabled) {
+  const quote = document.getElementById("quote");
+  quote.hidden = !enabled;
+  if (enabled) showRandomQuote();
 }
 
 function applyTypography(fontName, weight) {
@@ -482,6 +497,16 @@ async function init() {
     showSeconds = toggleSeconds.checked;
     await storageSet("sync", SHOW_SECONDS_KEY, showSeconds);
     updateClock();
+  });
+
+  const toggleQuote = document.getElementById("toggleQuote");
+  const showQuote = (await storageGet("sync", SHOW_QUOTE_KEY)) ?? true;
+  toggleQuote.checked = showQuote;
+  await applyQuoteVisibility(showQuote);
+
+  toggleQuote.addEventListener("change", async () => {
+    await storageSet("sync", SHOW_QUOTE_KEY, toggleQuote.checked);
+    await applyQuoteVisibility(toggleQuote.checked);
   });
 
   const layoutSelect = document.getElementById("layoutSelect");

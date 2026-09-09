@@ -115,6 +115,37 @@ body.layout-corner #searchForm {
   filter: invert(1) opacity(0.6);
 }
 
+#quote {
+  margin: 18px 0 0;
+  padding: 0;
+  max-width: min(480px, 80vw);
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+#quote p {
+  margin: 0;
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+#quote cite {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-style: normal;
+  opacity: 0.75;
+}
+
+#quote cite::before {
+  content: "— ";
+}
+
+body.layout-corner #quote {
+  margin-left: 24px;
+}
+
 #topControls {
   position: fixed;
   top: 20px;

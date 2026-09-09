@@ -14,6 +14,7 @@ html, body {
 #background {
   position: fixed;
   inset: 0;
+  z-index: 0;
   background-size: cover;
   background-position: center;
   background-color: #14161a;
@@ -24,55 +25,344 @@ html, body {
 #scrim {
   position: fixed;
   inset: 0;
+  z-index: 1;
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.05) 30%, rgba(0, 0, 0, 0.35) 100%);
   pointer-events: none;
 }
 
-#clockBlock {
+#panel {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
   text-align: center;
-  color: #fff;
-  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45);
 }
 
 #clock {
-  font-size: clamp(48px, 9vw, 120px);
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: clamp(64px, 13vw, 180px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
+  color: rgba(255, 255, 255, 0.55);
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 #date {
-  margin-top: 8px;
   font-size: clamp(14px, 1.6vw, 20px);
-  font-weight: 400;
-  opacity: 0.85;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
-#moodSelect {
+#searchForm {
+  width: min(420px, 70vw);
+  margin-top: 10px;
+}
+
+/* Corner layout: clock pinned top-left, left-aligned, like a lock screen */
+body.layout-corner #panel {
+  top: 56px;
+  left: 48px;
+  transform: none;
+  align-items: flex-start;
+  text-align: left;
+  gap: 6px;
+}
+
+body.layout-corner #clock {
+  font-size: clamp(64px, 11vw, 150px);
+}
+
+body.layout-corner #date {
+  display: none;
+}
+
+body.layout-corner #searchForm {
+  margin-top: 18px;
+  margin-left: 24px;
+  width: min(360px, 60vw);
+}
+
+#searchInput {
+  width: 100%;
+  padding: 13px 22px;
+  font-size: 15px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  outline: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+#searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#searchInput:focus {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+#searchInput::-webkit-search-cancel-button {
+  filter: invert(1) opacity(0.6);
+}
+
+#quote {
+  margin: 18px 0 0;
+  padding: 0;
+  max-width: min(480px, 80vw);
+  color: rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+#quote p {
+  margin: 0;
+  font-size: clamp(14px, 1.6vw, 18px);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+#quote cite {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-style: normal;
+  opacity: 0.75;
+}
+
+#quote cite::before {
+  content: "— ";
+}
+
+body.layout-corner #quote {
+  margin-left: 24px;
+}
+
+#topControls {
   position: fixed;
   top: 20px;
   right: 20px;
+  z-index: 2;
+  display: flex;
+  gap: 8px;
+}
+
+#fontSelect,
+#weightSelect,
+#layoutSelect,
+#moodSelect {
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
   padding: 6px 10px;
   font-size: 13px;
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
 
+#fontSelect option,
+#weightSelect option,
+#layoutSelect option,
 #moodSelect option {
   color: #111;
+}
+
+#settingsButton {
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+#settingsPanel {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  z-index: 3;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: rgba(20, 20, 24, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  color: #fff;
+  font-size: 13px;
+}
+
+#settingsPanel:not([hidden]) {
+  display: flex;
+}
+
+#settingsPanel label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+#settingsPanel hr {
+  width: 100%;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin: 2px 0;
+}
+
+#settingsPanel button {
+  margin-top: 4px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#settingsPanel button:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+#widgets {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 280px;
+}
+
+/* Corner layout already occupies the top-left with the clock, so push
+   the calendar/gmail cards below it instead of overlapping. */
+body.layout-corner #widgets {
+  top: 280px;
+}
+
+.info-card {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  color: #fff;
+}
+
+.info-card h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.info-card ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-card li {
+  font-size: 13px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.info-card .card-action {
+  margin-top: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.gmail-from {
+  font-weight: 600;
+  opacity: 0.95;
+}
+
+.gmail-subject {
+  opacity: 0.75;
+}
+
+#bookmarks {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: min(760px, 88vw);
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 160px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.bookmark-item:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-2px);
+}
+
+.bookmark-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.bookmark-label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 #credit {
   position: fixed;
   bottom: 16px;
   right: 20px;
+  z-index: 2;
   font-size: 12px;
   color: rgba(255, 255, 255, 0.75);
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);

@@ -198,6 +198,8 @@ function faviconURL(pageUrl) {
 
 function renderBookmarks(bookmarks) {
   const container = document.getElementById("bookmarks");
+  const zone = document.getElementById("bookmarksZone");
+  zone.hidden = bookmarks.length === 0;
   container.replaceChildren();
 
   for (const bookmark of bookmarks) {

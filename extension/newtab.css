@@ -309,17 +309,54 @@ body.layout-corner #widgets {
   opacity: 0.75;
 }
 
-#bookmarks {
+#bookmarksZone {
   position: fixed;
-  bottom: 32px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 96px;
   z-index: 2;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 16px;
+}
+
+#bookmarksZone:not([hidden]) {
+  display: flex;
+}
+
+#bookmarksHint {
+  width: 44px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.35);
+  margin-bottom: 12px;
+  transition: opacity 0.25s ease;
+}
+
+#bookmarksZone:hover #bookmarksHint,
+#bookmarksZone:focus-within #bookmarksHint {
+  opacity: 0;
+}
+
+#bookmarks {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
   max-width: min(760px, 88vw);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+#bookmarksZone:hover #bookmarks,
+#bookmarksZone:focus-within #bookmarks {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 .bookmark-item {

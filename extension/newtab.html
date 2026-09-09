@@ -10,52 +10,74 @@
   <div id="scrim"></div>
 
   <div id="topControls">
-    <select id="fontSelect" aria-label="폰트 선택">
-      <option value="system">시스템 기본</option>
-      <option value="Inter">Inter</option>
-      <option value="Poppins">Poppins</option>
-      <option value="Montserrat">Montserrat</option>
-      <option value="Sora">Sora</option>
-      <option value="Space Grotesk">Space Grotesk</option>
-      <option value="Outfit">Outfit</option>
-      <option value="Bebas Neue">Bebas Neue</option>
-      <option value="Archivo Black">Archivo Black</option>
-    </select>
-
-    <select id="weightSelect" aria-label="폰트 굵기 선택">
-      <option value="400">Regular</option>
-      <option value="500">Medium</option>
-      <option value="600">SemiBold</option>
-      <option value="700">Bold</option>
-      <option value="800" selected>ExtraBold</option>
-      <option value="900">Black</option>
-    </select>
-
-    <select id="layoutSelect" aria-label="레이아웃 선택">
-      <option value="center">가운데</option>
-      <option value="corner">코너</option>
-    </select>
-
-    <select id="moodSelect" aria-label="무드 선택">
-      <option value="random">랜덤</option>
-      <option value="calm">차분함</option>
-      <option value="energetic">활기참</option>
-      <option value="nature">자연</option>
-      <option value="minimal">미니멀</option>
-      <option value="dark">다크</option>
-      <option value="cozy">포근함</option>
-      <option value="ocean">바다</option>
-      <option value="fall">가을</option>
-      <option value="winter">겨울</option>
-    </select>
-
-    <button id="settingsButton" aria-label="설정" title="위젯 설정">⚙</button>
+    <button id="settingsButton" aria-label="설정" title="설정">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+      </svg>
+    </button>
   </div>
 
   <div id="settingsPanel" hidden>
+    <label class="settings-row">
+      <span>폰트</span>
+      <select id="fontSelect" aria-label="폰트 선택">
+        <option value="system">시스템 기본</option>
+        <option value="Inter">Inter</option>
+        <option value="Poppins">Poppins</option>
+        <option value="Montserrat">Montserrat</option>
+        <option value="Sora">Sora</option>
+        <option value="Space Grotesk">Space Grotesk</option>
+        <option value="Outfit">Outfit</option>
+        <option value="Bebas Neue">Bebas Neue</option>
+        <option value="Archivo Black">Archivo Black</option>
+      </select>
+    </label>
+
+    <label class="settings-row">
+      <span>굵기</span>
+      <select id="weightSelect" aria-label="폰트 굵기 선택">
+        <option value="400">Regular</option>
+        <option value="500">Medium</option>
+        <option value="600">SemiBold</option>
+        <option value="700">Bold</option>
+        <option value="800" selected>ExtraBold</option>
+        <option value="900">Black</option>
+      </select>
+    </label>
+
+    <label class="settings-row">
+      <span>레이아웃</span>
+      <select id="layoutSelect" aria-label="레이아웃 선택">
+        <option value="center">가운데</option>
+        <option value="corner">코너</option>
+      </select>
+    </label>
+
+    <label class="settings-row">
+      <span>무드</span>
+      <select id="moodSelect" aria-label="무드 선택">
+        <option value="random">랜덤</option>
+        <option value="calm">차분함</option>
+        <option value="energetic">활기참</option>
+        <option value="nature">자연</option>
+        <option value="minimal">미니멀</option>
+        <option value="dark">다크</option>
+        <option value="cozy">포근함</option>
+        <option value="ocean">바다</option>
+        <option value="fall">가을</option>
+        <option value="winter">겨울</option>
+      </select>
+    </label>
+
+    <hr />
+
     <label><input type="checkbox" id="toggleSeconds" /> 시계에 초 표시</label>
     <label><input type="checkbox" id="toggleQuote" /> 오늘의 한마디 표시</label>
+
     <hr />
+
     <label><input type="checkbox" id="toggleCalendar" /> 다음 일정 표시</label>
     <label><input type="checkbox" id="toggleGmail" /> 안읽은 메일 표시</label>
     <button id="googleSignInButton" hidden>Google 계정 연결</button>

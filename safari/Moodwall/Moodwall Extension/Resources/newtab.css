@@ -143,46 +143,34 @@ body.layout-corner #quote {
   gap: 8px;
 }
 
-#fontSelect,
-#weightSelect,
-#layoutSelect,
-#moodSelect {
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 13px;
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-}
-
-#fontSelect option,
-#weightSelect option,
-#layoutSelect option,
-#moodSelect option {
-  color: #111;
-}
-
 #settingsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
   background: rgba(0, 0, 0, 0.35);
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
-  padding: 5px 10px;
-  font-size: 14px;
   cursor: pointer;
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+  transition: background 0.15s ease;
+}
+
+#settingsButton:hover {
+  background: rgba(0, 0, 0, 0.5);
 }
 
 #settingsPanel {
   position: fixed;
-  top: 60px;
+  top: 62px;
   right: 20px;
   z-index: 3;
   flex-direction: column;
   gap: 10px;
+  width: 240px;
   padding: 16px 18px;
   border-radius: 14px;
   background: rgba(20, 20, 24, 0.75);
@@ -202,6 +190,25 @@ body.layout-corner #quote {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+}
+
+#settingsPanel .settings-row {
+  justify-content: space-between;
+  cursor: default;
+}
+
+#settingsPanel .settings-row select {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 7px;
+  padding: 5px 8px;
+  font-size: 12px;
+  max-width: 130px;
+}
+
+#settingsPanel .settings-row select option {
+  color: #111;
 }
 
 #settingsPanel hr {

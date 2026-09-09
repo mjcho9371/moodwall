@@ -126,20 +126,8 @@ body.layout-corner #searchForm {
 #quote p {
   margin: 0;
   font-size: clamp(14px, 1.6vw, 18px);
-  font-style: italic;
+  font-weight: 500;
   line-height: 1.5;
-}
-
-#quote cite {
-  display: block;
-  margin-top: 6px;
-  font-size: 13px;
-  font-style: normal;
-  opacity: 0.75;
-}
-
-#quote cite::before {
-  content: "— ";
 }
 
 body.layout-corner #quote {

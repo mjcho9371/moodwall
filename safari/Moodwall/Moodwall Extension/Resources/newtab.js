@@ -113,9 +113,8 @@ function applyLayout(layout) {
 function showRandomQuote() {
   const quotes = typeof QUOTES !== "undefined" ? QUOTES : [];
   if (quotes.length === 0) return;
-  const { text, author } = quotes[Math.floor(Math.random() * quotes.length)];
+  const { text } = quotes[Math.floor(Math.random() * quotes.length)];
   document.getElementById("quoteText").textContent = text;
-  document.getElementById("quoteAuthor").textContent = author;
 }
 
 async function applyQuoteVisibility(enabled) {

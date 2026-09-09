@@ -54,7 +54,7 @@
 
   <div id="settingsPanel" hidden>
     <label><input type="checkbox" id="toggleSeconds" /> 시계에 초 표시</label>
-    <label><input type="checkbox" id="toggleQuote" /> 명언 표시</label>
+    <label><input type="checkbox" id="toggleQuote" /> 오늘의 한마디 표시</label>
     <hr />
     <label><input type="checkbox" id="toggleCalendar" /> 다음 일정 표시</label>
     <label><input type="checkbox" id="toggleGmail" /> 안읽은 메일 표시</label>
@@ -86,10 +86,9 @@
         autofocus
       />
     </form>
-    <blockquote id="quote" hidden>
+    <div id="quote" hidden>
       <p id="quoteText"></p>
-      <cite id="quoteAuthor"></cite>
-    </blockquote>
+    </div>
   </main>
 
   <div id="bookmarksZone">

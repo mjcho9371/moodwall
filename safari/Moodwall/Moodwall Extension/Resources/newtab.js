@@ -141,6 +141,7 @@ function applyTypography(fontName, weight) {
   if (!fontName || fontName === "system") {
     if (link) link.remove();
     panel.style.fontFamily = "";
+    clock.style.fontFamily = "";
     return;
   }
 
@@ -154,8 +155,14 @@ function applyTypography(fontName, weight) {
     document.head.appendChild(link);
   }
   link.href = href;
-  const fallback = SERIF_FONTS.has(fontName) ? "serif" : "-apple-system, sans-serif";
-  panel.style.fontFamily = `'${fontName}', ${fallback}`;
+
+  if (SERIF_FONTS.has(fontName)) {
+    panel.style.fontFamily = "";
+    clock.style.fontFamily = `'${fontName}', serif`;
+  } else {
+    panel.style.fontFamily = `'${fontName}', -apple-system, sans-serif`;
+    clock.style.fontFamily = "";
+  }
 }
 
 const MAX_BOOKMARKS = 10;

@@ -23,6 +23,7 @@ const SHOW_QUOTE_KEY = "moodwall_show_quote";
 let showSeconds = true;
 
 const hasChromeStorage = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
+const hasChromeIdentity = typeof chrome !== "undefined" && !!chrome.identity;
 
 async function storageGet(area, key) {
   if (!hasChromeStorage) return undefined;
@@ -322,6 +323,27 @@ async function fetchUnreadGmail(token, maxResults = 5) {
   };
 }
 
+function mockNextEvents() {
+  const now = Date.now();
+  return [
+    { title: "팀 스탠드업 미팅", start: new Date(now + 60 * 60 * 1000).toISOString(), allDay: false },
+    { title: "디자인 리뷰", start: new Date(now + 4 * 60 * 60 * 1000).toISOString(), allDay: false },
+    { title: "프로젝트 마감일", start: new Date(now + 26 * 60 * 60 * 1000).toISOString(), allDay: true }
+  ];
+}
+
+function mockUnreadGmail() {
+  const now = Date.now();
+  return {
+    unreadCount: 7,
+    messages: [
+      { from: "김민준", subject: "다음 주 회의 일정 공유드립니다", date: now - 10 * 60 * 1000 },
+      { from: "GitHub", subject: "[moodwall] PR #3 merged", date: now - 2 * 60 * 60 * 1000 },
+      { from: "Notion", subject: "새로운 댓글이 달렸어요", date: now - 5 * 60 * 60 * 1000 }
+    ]
+  };
+}
+
 function formatEventTime(event) {
   if (!event.start) return "";
   const date = new Date(event.start);
@@ -347,14 +369,39 @@ function renderConnectButton(widgetEl, onClick) {
   widgetEl.querySelector("h3").after(button);
 }
 
+function ensureMockBadge(widgetEl) {
+  const h3 = widgetEl.querySelector("h3");
+  if (h3.querySelector(".mock-badge")) return;
+  const badge = document.createElement("span");
+  badge.className = "mock-badge";
+  badge.textContent = "미리보기 (샘플 데이터)";
+  h3.append(badge);
+}
+
+// No chrome.identity means we're outside the installed extension (e.g. the
+// `python3 -m http.server` local preview from the README) -- show sample
+// data instead of a real Google sign-in flow so the widget layout can still
+// be previewed.
 async function refreshCalendarWidget() {
   const widget = document.getElementById("calendarWidget");
   const list = document.getElementById("calendarList");
-  const enabled = (await storageGet("sync", CALENDAR_ENABLED_KEY)) ?? false;
+  const enabled = hasChromeIdentity ? (await storageGet("sync", CALENDAR_ENABLED_KEY)) ?? false : true;
   widget.hidden = !enabled;
   if (!enabled) return;
 
   widget.querySelectorAll(".card-action").forEach((btn) => btn.remove());
+
+  if (!hasChromeIdentity) {
+    ensureMockBadge(widget);
+    list.replaceChildren();
+    for (const event of mockNextEvents()) {
+      const li = document.createElement("li");
+      li.textContent = `${formatEventTime(event)} · ${event.title}`;
+      list.append(li);
+    }
+    return;
+  }
+
   renderCardMessage(list, "불러오는 중…");
 
   try {
@@ -381,11 +428,31 @@ async function refreshGmailWidget() {
   const widget = document.getElementById("gmailWidget");
   const list = document.getElementById("gmailList");
   const countEl = document.getElementById("unreadCount");
-  const enabled = (await storageGet("sync", GMAIL_ENABLED_KEY)) ?? false;
+  const enabled = hasChromeIdentity ? (await storageGet("sync", GMAIL_ENABLED_KEY)) ?? false : true;
   widget.hidden = !enabled;
   if (!enabled) return;
 
   widget.querySelectorAll(".card-action").forEach((btn) => btn.remove());
+
+  if (!hasChromeIdentity) {
+    ensureMockBadge(widget);
+    const { unreadCount, messages } = mockUnreadGmail();
+    countEl.textContent = `(${unreadCount})`;
+    list.replaceChildren();
+    for (const msg of messages) {
+      const li = document.createElement("li");
+      const from = document.createElement("span");
+      from.className = "gmail-from";
+      from.textContent = msg.from;
+      const subject = document.createElement("span");
+      subject.className = "gmail-subject";
+      subject.textContent = ` — ${msg.subject}`;
+      li.append(from, subject);
+      list.append(li);
+    }
+    return;
+  }
+
   countEl.textContent = "";
   renderCardMessage(list, "불러오는 중…");
 
@@ -459,8 +526,17 @@ async function initGoogleWidgets() {
   const signInButton = document.getElementById("googleSignInButton");
   const signOutButton = document.getElementById("googleSignOutButton");
 
-  toggleCalendar.checked = (await storageGet("sync", CALENDAR_ENABLED_KEY)) ?? false;
-  toggleGmail.checked = (await storageGet("sync", GMAIL_ENABLED_KEY)) ?? false;
+  if (hasChromeIdentity) {
+    toggleCalendar.checked = (await storageGet("sync", CALENDAR_ENABLED_KEY)) ?? false;
+    toggleGmail.checked = (await storageGet("sync", GMAIL_ENABLED_KEY)) ?? false;
+  } else {
+    // Local preview (no chrome.identity): widgets always show sample data,
+    // so reflect that in the checkboxes instead of a stale unchecked state.
+    toggleCalendar.checked = true;
+    toggleGmail.checked = true;
+    toggleCalendar.disabled = true;
+    toggleGmail.disabled = true;
+  }
 
   settingsButton.addEventListener("click", () => {
     settingsPanel.hidden = !settingsPanel.hidden;

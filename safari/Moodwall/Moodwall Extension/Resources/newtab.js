@@ -378,6 +378,36 @@ function ensureMockBadge(widgetEl) {
   h3.append(badge);
 }
 
+function renderEventList(list, events) {
+  list.replaceChildren();
+  for (const event of events) {
+    const li = document.createElement("li");
+    const title = document.createElement("span");
+    title.className = "item-title";
+    title.textContent = event.title;
+    const meta = document.createElement("span");
+    meta.className = "item-meta";
+    meta.textContent = formatEventTime(event);
+    li.append(title, meta);
+    list.append(li);
+  }
+}
+
+function renderGmailList(list, messages) {
+  list.replaceChildren();
+  for (const msg of messages) {
+    const li = document.createElement("li");
+    const from = document.createElement("span");
+    from.className = "item-title";
+    from.textContent = msg.from;
+    const subject = document.createElement("span");
+    subject.className = "item-meta";
+    subject.textContent = msg.subject;
+    li.append(from, subject);
+    list.append(li);
+  }
+}
+
 // No chrome.identity means we're outside the installed extension (e.g. the
 // `python3 -m http.server` local preview from the README) -- show sample
 // data instead of a real Google sign-in flow so the widget layout can still
@@ -393,12 +423,7 @@ async function refreshCalendarWidget() {
 
   if (!hasChromeIdentity) {
     ensureMockBadge(widget);
-    list.replaceChildren();
-    for (const event of mockNextEvents()) {
-      const li = document.createElement("li");
-      li.textContent = `${formatEventTime(event)} · ${event.title}`;
-      list.append(li);
-    }
+    renderEventList(list, mockNextEvents());
     return;
   }
 
@@ -411,12 +436,7 @@ async function refreshCalendarWidget() {
       renderCardMessage(list, "예정된 일정 없음");
       return;
     }
-    list.replaceChildren();
-    for (const event of events) {
-      const li = document.createElement("li");
-      li.textContent = `${formatEventTime(event)} · ${event.title}`;
-      list.append(li);
-    }
+    renderEventList(list, events);
   } catch (err) {
     console.warn("Moodwall: calendar fetch failed.", err);
     renderConnectButton(widget, () => connectGoogle());
@@ -438,18 +458,7 @@ async function refreshGmailWidget() {
     ensureMockBadge(widget);
     const { unreadCount, messages } = mockUnreadGmail();
     countEl.textContent = `(${unreadCount})`;
-    list.replaceChildren();
-    for (const msg of messages) {
-      const li = document.createElement("li");
-      const from = document.createElement("span");
-      from.className = "gmail-from";
-      from.textContent = msg.from;
-      const subject = document.createElement("span");
-      subject.className = "gmail-subject";
-      subject.textContent = ` — ${msg.subject}`;
-      li.append(from, subject);
-      list.append(li);
-    }
+    renderGmailList(list, messages);
     return;
   }
 
@@ -464,18 +473,7 @@ async function refreshGmailWidget() {
       renderCardMessage(list, "읽지 않은 메일 없음");
       return;
     }
-    list.replaceChildren();
-    for (const msg of messages) {
-      const li = document.createElement("li");
-      const from = document.createElement("span");
-      from.className = "gmail-from";
-      from.textContent = msg.from;
-      const subject = document.createElement("span");
-      subject.className = "gmail-subject";
-      subject.textContent = ` — ${msg.subject}`;
-      li.append(from, subject);
-      list.append(li);
-    }
+    renderGmailList(list, messages);
   } catch (err) {
     console.warn("Moodwall: gmail fetch failed.", err);
     renderConnectButton(widget, () => connectGoogle());

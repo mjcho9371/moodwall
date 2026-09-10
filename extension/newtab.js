@@ -7,6 +7,14 @@ const CACHE_KEY = "moodwall_manifest_cache";
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 const MOOD_KEY = "moodwall_selected_mood";
 const FONT_KEY = "moodwall_selected_font";
+const SERIF_FONTS = new Set([
+  "Playfair Display",
+  "Lora",
+  "Merriweather",
+  "EB Garamond",
+  "Noto Serif KR",
+  "Nanum Myeongjo"
+]);
 const WEIGHT_KEY = "moodwall_selected_weight";
 const SHOW_SECONDS_KEY = "moodwall_show_seconds";
 const LAYOUT_KEY = "moodwall_layout";
@@ -146,7 +154,8 @@ function applyTypography(fontName, weight) {
     document.head.appendChild(link);
   }
   link.href = href;
-  panel.style.fontFamily = `'${fontName}', -apple-system, sans-serif`;
+  const fallback = SERIF_FONTS.has(fontName) ? "serif" : "-apple-system, sans-serif";
+  panel.style.fontFamily = `'${fontName}', ${fallback}`;
 }
 
 const MAX_BOOKMARKS = 10;

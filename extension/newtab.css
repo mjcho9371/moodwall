@@ -235,26 +235,40 @@ body.layout-corner #quote {
   background: rgba(255, 255, 255, 0.22);
 }
 
-/* Default (center) layout: widgets flow inside #panel, stacked below the
-   quote, instead of floating as a separate fixed card. */
+/* Default (center) layout: widgets flow inside #panel, below the quote,
+   side by side instead of floating as a separate fixed card -- keeps the
+   stack from growing too tall when both widgets are shown. */
 #widgets {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  width: min(320px, 80vw);
+  width: min(560px, 90vw);
   margin-top: 4px;
   text-align: left;
 }
 
+#widgets .info-card {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
 /* Corner layout already occupies the left side with the clock, so pin the
-   calendar/gmail cards to the right instead of overlapping it. */
+   calendar/gmail cards to the right instead of overlapping it, stacked
+   vertically since the right column is narrow. */
 body.layout-corner #widgets {
   position: fixed;
   top: 76px;
   right: 20px;
   left: auto;
+  flex-direction: column;
   width: 280px;
   margin-top: 0;
+}
+
+body.layout-corner #widgets .info-card {
+  flex: none;
 }
 
 /* The settings panel also lives on the right; push the widgets below it

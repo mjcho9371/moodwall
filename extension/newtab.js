@@ -429,6 +429,21 @@ async function disconnectGoogle() {
   await Promise.all([refreshCalendarWidget(), refreshGmailWidget()]);
 }
 
+async function hasGoogleAuth() {
+  try {
+    await getAuthToken(false);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function updateGoogleAuthButtons(signInButton, signOutButton) {
+  const connected = await hasGoogleAuth();
+  signInButton.hidden = connected;
+  signOutButton.hidden = !connected;
+}
+
 async function initGoogleWidgets() {
   const toggleCalendar = document.getElementById("toggleCalendar");
   const toggleGmail = document.getElementById("toggleGmail");
@@ -454,10 +469,15 @@ async function initGoogleWidgets() {
     await refreshGmailWidget();
   });
 
-  signInButton.hidden = false;
-  signOutButton.hidden = false;
-  signInButton.addEventListener("click", connectGoogle);
-  signOutButton.addEventListener("click", disconnectGoogle);
+  await updateGoogleAuthButtons(signInButton, signOutButton);
+  signInButton.addEventListener("click", async () => {
+    await connectGoogle();
+    await updateGoogleAuthButtons(signInButton, signOutButton);
+  });
+  signOutButton.addEventListener("click", async () => {
+    await disconnectGoogle();
+    await updateGoogleAuthButtons(signInButton, signOutButton);
+  });
 
   await Promise.all([refreshCalendarWidget(), refreshGmailWidget()]);
 }

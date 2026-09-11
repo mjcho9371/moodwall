@@ -15,7 +15,7 @@
     "https://gmail.googleapis.com/*"
   ],
   "oauth2": {
-    "client_id": "REPLACE_WITH_GOOGLE_OAUTH_CLIENT_ID.apps.googleusercontent.com",
+    "client_id": "406019483947-802tgq32pfvf03bujued8gatd277g8aa.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/gmail.readonly",
       "https://www.googleapis.com/auth/calendar.readonly"

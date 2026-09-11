@@ -269,6 +269,7 @@ body.layout-corner #widgets {
 
 body.layout-corner #widgets .info-card {
   flex: none;
+  width: 100%;
 }
 
 /* The settings panel also lives on the right; push the widgets below it
